@@ -38,7 +38,10 @@ class CustomDataset(torch.utils.data.Dataset):
     self.mode = mode
 
     # Load training set
-    self.data_lsts = np.load(direc, allow_pickle=True)
+    self.data_lsts = np.load(direc, allow_pickle=True)[0:128, 0:1200]
+    if np.isnan(self.data_lsts).any():
+      print(f"Data has NaN values")
+    print(f"Data shape: {self.data_lsts.shape}")
 
     # First do global standardization
     self.ts_means, self.ts_stds = [], []
@@ -52,7 +55,7 @@ class CustomDataset(torch.utils.data.Dataset):
     self.ts_stds = np.array(self.ts_stds)
 
     if mode == "test":
-      self.test_lsts = np.load(direc_test, allow_pickle=True)
+      self.test_lsts = np.load(direc_test, allow_pickle=True)[0:128, 0:1200]
       for i, item in enumerate(self.test_lsts):
         self.test_lsts[i] = (item - self.ts_means[i]) / self.ts_stds[i]
       self.ts_indices = list(range(len(self.test_lsts)))

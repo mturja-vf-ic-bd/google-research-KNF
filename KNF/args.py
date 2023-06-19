@@ -34,14 +34,14 @@ from absl import flags
 FLAGS = flags.FLAGS
 _SEED = flags.DEFINE_integer("seed", 123, "The random seed.")
 
-_DATASET = flags.DEFINE_string("dataset", "M4",
-                               "dataset classes: M4, Cryptos, Traj")
+_DATASET = flags.DEFINE_string("dataset", "HCP",
+                               "dataset classes: HCP, M4, Cryptos, Traj")
 
 _DATA_DIR = flags.DEFINE_string(
-    "data_dir", "data_prep/M4/",
+    "data_dir", "data/HCP/",
     "Data directory containing train and test data.")
 
-_NUM_FEATS = flags.DEFINE_integer("num_feats", 1, "Number of features.")
+_NUM_FEATS = flags.DEFINE_integer("num_feats", 50, "Number of features.")
 
 _REGULARIZE_RANK = flags.DEFINE_bool(
     "regularize_rank", False, "Whether to regularize dynamics module rank.")
@@ -49,7 +49,7 @@ _REGULARIZE_RANK = flags.DEFINE_bool(
 _USE_REVIN = flags.DEFINE_bool("use_revin", True,
                                "Whether to use reinversible normalization.")
 
-_USE_INSTANCENORM = flags.DEFINE_bool("use_instancenorm", True,
+_USE_INSTANCENORM = flags.DEFINE_bool("use_instancenorm", False,
                                       "Whether to use instance normalization.")
 
 _ADD_GLOBAL_OPERATOR = flags.DEFINE_bool(
@@ -58,23 +58,23 @@ _ADD_GLOBAL_OPERATOR = flags.DEFINE_bool(
 _ADD_CONTROL = flags.DEFINE_bool("add_control", True,
                                  "Whether to use a control module.")
 
-_DATA_FREQ = flags.DEFINE_string("data_freq", "None",
+_DATA_FREQ = flags.DEFINE_string("data_freq", "Weekly",
                                  "The frequency of the time series data.")
 
-_LEARNING_RATE = flags.DEFINE_float("learning_rate", 0.001,
+_LEARNING_RATE = flags.DEFINE_float("learning_rate", 0.0001,
                                     "The initial learning rate.")
 
 _DROPOUT_RATE = flags.DEFINE_float("dropout_rate", 0.0, "The dropout rate.")
 
-_DECAY_RATE = flags.DEFINE_float("decay_rate", 0.9, "The learning decay rate.")
+_DECAY_RATE = flags.DEFINE_float("decay_rate", 0.95, "The learning decay rate.")
 
-_BATCH_SIZE = flags.DEFINE_integer("batch_size", 128, "The batch size.")
+_BATCH_SIZE = flags.DEFINE_integer("batch_size", 4, "The batch size.")
 
-_LATENT_DIM = flags.DEFINE_integer("latent_dim", 64,
+_LATENT_DIM = flags.DEFINE_integer("latent_dim", 8,
                                    "The dimension of latent Koopman space.")
 _NUM_STEPS = flags.DEFINE_integer(
     "num_steps",
-    5,
+    4,
     "The number of steps of predictions in one autoregressive call.",
 )
 
@@ -93,28 +93,28 @@ _JUMPS = flags.DEFINE_integer(
     "jumps", 5, "The number of skipped steps when genrating sliced samples.")
 
 _NUM_EPOCHS = flags.DEFINE_integer(
-    "num_epochs", 1000, "The maximum number of epochs.")
+    "num_epochs", 100, "The maximum number of epochs.")
 
 _MIN_EPOCHS = flags.DEFINE_integer(
     "min_epochs", 60, "The minimum number of epochs the model is trained with.")
 
 _INPUT_DIM = flags.DEFINE_integer(
-    "input_dim", 5,
+    "input_dim", 4,
     "The number of observations taken by the encoder at each step")
 
 _INPUT_LENGTH = flags.DEFINE_integer(
-    "input_length", 45,
+    "input_length", 64,
     "The lookback window length for learning Koopman operator.")
 
 _HIDDEN_DIM = flags.DEFINE_integer(
     "hidden_dim", 256, "The hidden dimension of the encoder and decoder.")
 
 _TRAIN_OUTPUT_LENGTH = flags.DEFINE_integer(
-    "train_output_length", 10,
+    "train_output_length", 8,
     "The training output length for backpropogation.")
 
 _TEST_OUTPUT_LENGTH = flags.DEFINE_integer(
-    "test_output_length", 13, "The forecasting horizon on the test set.")
+    "test_output_length", 8, "The forecasting horizon on the test set.")
 
 _NUM_HEADS = flags.DEFINE_integer("num_heads", 1, "Transformer number of heads")
 
@@ -124,8 +124,8 @@ _TRANSFORMER_DIM = flags.DEFINE_integer("transformer_dim", 128,
 _TRANSFORMER_NUM_LAYERS = flags.DEFINE_integer(
     "transformer_num_layers", 3, "Number of Layers in Transformer Encoder.")
 
-_NUM_SINS = flags.DEFINE_integer("num_sins", -1, "number of sine functions.")
+_NUM_SINS = flags.DEFINE_integer("num_sins", 2, "number of sine functions.")
 
-_NUM_POLY = flags.DEFINE_integer("num_poly", -1, "number of sine functions.")
+_NUM_POLY = flags.DEFINE_integer("num_poly", 2, "number of poly functions.")
 
-_NUM_EXP = flags.DEFINE_integer("num_exp", -1, "number of sine functions.")
+_NUM_EXP = flags.DEFINE_integer("num_exp", 2, "number of exp functions.")

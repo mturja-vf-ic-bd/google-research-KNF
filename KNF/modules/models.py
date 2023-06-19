@@ -173,7 +173,6 @@ class Koopman(nn.Module):
           list(itertools.combinations(np.arange(0, self.num_feats), 2)))
     else:
       self.len_interas = 0
-
     # reversible instance normalization
     if use_revin:
       self.normalizer = RevIN(num_features=self.output_dim, axis=(1, 2))
@@ -242,25 +241,30 @@ class Koopman(nn.Module):
     ##################### Encoding ######################
     # the encoder learns the coefficients of basis functions
     encoder_outs = self.encoder(inps)
+    # print(f"encoder out shape: {encoder_outs.shape}")
 
     # reshape inputs and encoder outputs for next step
     encoder_outs = encoder_outs.reshape(inps.shape[0], inps.shape[1],
                                         (self.latent_dim + self.num_sins * 2),
                                         self.input_dim * self.num_feats)
+    # print(f"encoder out shape: {encoder_outs.shape}")
     encoder_outs = encoder_outs.reshape(inps.shape[0], inps.shape[1],
                                         (self.latent_dim + self.num_sins * 2),
                                         self.input_dim, self.num_feats)
+    # print(f"encoder out shape: {encoder_outs.shape}")
     inps = inps.reshape(inps.shape[0], inps.shape[1], self.input_dim,
                         self.num_feats)
 
     # the input to the measurement functions are
     # the muliplication of coeffcients and original observations.
     coefs = torch.einsum("blkdf, bldf -> blfk", encoder_outs, inps)
+    # print(f"coef shape: {coefs.shape}")
     #####################################################
 
     ################ Calculate Meausurements ############
     embedding = torch.zeros(encoder_outs.shape[0], encoder_outs.shape[1],
                             self.num_feats, self.latent_dim).to(inps.device)
+    # print("Embedding shape: ", embedding.shape)
     for f in range(self.num_feats):
       # polynomials
       for i in range(self.num_poly):

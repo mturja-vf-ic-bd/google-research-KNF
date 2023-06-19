@@ -32,6 +32,7 @@
 import os
 import random
 import time
+from tqdm import tqdm
 
 from absl import app
 from args import FLAGS
@@ -52,6 +53,8 @@ from torch import nn
 from torch.utils import data
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = 0
+print(device)
 
 
 def main(argv):
@@ -96,6 +99,7 @@ def main(argv):
   direc_test = os.path.join(data_dir, "test.npy")
 
   data_dict = {
+      "HCP": CustomDataset,
       "mini": CustomDataset,
       "M4": M4Dataset,
       "Cryptos": CrytosDataset,
@@ -103,6 +107,7 @@ def main(argv):
   }
 
   metric_dict = {
+      "HCP": SMAPE,
       "mini": SMAPE,
       "M4": SMAPE,
       "Cryptos": WRMSE,
@@ -239,6 +244,7 @@ def main(argv):
         # dropout rate of MLP modules
         dropout_rate=FLAGS.dropout_rate
     ).to(device)
+    # model = nn.DataParallel(model, device_ids=[0, 1])
 
     print("New model")
   print("number of params:",
@@ -253,7 +259,7 @@ def main(argv):
   all_train_rmses, all_eval_rmses = [], []
   best_eval_rmse = 1e6
 
-  for epoch in range(last_epoch, num_epochs):
+  for epoch in tqdm(range(last_epoch, num_epochs)):
     start_time = time.time()
 
     train_rmse = train_epoch_koopman(
@@ -289,9 +295,10 @@ def main(argv):
 
   _, test_preds, test_tgts = eval_epoch_koopman(test_loader, best_model,
                                                 loss_fun)
+  print(f"Test pred shape: {test_preds.shape}")
 
   # Denormalize the predictions
-  if FLAGS.dataset == "M4" or FLAGS.dataset == "mini":
+  if FLAGS.dataset == "M4" or FLAGS.dataset == "mini" or FLAGS.dataset == "HCP":
     test_preds = (test_preds * test_set.ts_stds.reshape(
         -1, 1, 1)) + test_set.ts_means.reshape(-1, 1, 1)
     test_tgts = (test_tgts * test_set.ts_stds.reshape(

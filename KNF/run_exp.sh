@@ -60,6 +60,9 @@ CUDA_VISIBLE_DEVICES=1 python3 run_koopman.py --seed=2 --dataset="Cryptos" --dat
 CUDA_VISIBLE_DEVICES=2 python3 run_koopman.py --seed=28 --dataset="Cryptos" --data_dir="data/Cryptos/" --num_feats=8 --train_output_length=14 --test_output_length=15 --input_dim=7 --input_length=63 --hidden_dim=64 --num_layers=5 --latent_dim=16 --transformer_num_layers=3 --transformer_dim=256 --control_num_layers=3 --control_hidden_dim=128 --learning_rate=0.005 --batch_size=512 --jumps=100 --num_sins=6 --num_steps=7 &
 CUDA_VISIBLE_DEVICES=3 python3 run_koopman.py --seed=3 --dataset="Cryptos" --data_dir="data/Cryptos/" --num_feats=8 --train_output_length=14 --test_output_length=15 --input_dim=7 --input_length=63 --hidden_dim=64 --num_layers=5 --latent_dim=16 --transformer_num_layers=3 --transformer_dim=256 --control_num_layers=3 --control_hidden_dim=128 --learning_rate=0.005 --batch_size=512 --jumps=100 --num_sins=6 --num_steps=7 &
 CUDA_VISIBLE_DEVICES=0 python3 run_koopman.py --seed=43 --dataset="Cryptos" --data_dir="data/Cryptos/" --num_feats=8 --train_output_length=14 --test_output_length=15 --input_dim=7 --input_length=63 --hidden_dim=64 --num_layers=5 --latent_dim=16 --transformer_num_layers=3 --transformer_dim=256 --control_num_layers=3 --control_hidden_dim=128 --learning_rate=0.005 --batch_size=512 --jumps=100 --num_sins=6 --num_steps=7 &
+
+# HCP
+CUDA_VISIBLE_DEVICES=0 python3 run_koopman.py --seed=901 --dataset="HCP" --data_dir="data/HCP/" --train_output_length=10 --test_output_length=10 --input_dim=8 --input_length=64 --hidden_dim=256 --num_layers=4 --latent_dim=32 --learning_rate=0.0001 --batch_size=128 --num_epochs 50 --jumps=3 --num_steps=16 -decay_rate=0.85 >> HCP_out_128_grond_0.txt &
 wait
 
 
